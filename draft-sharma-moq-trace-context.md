@@ -89,17 +89,15 @@ Traceparent. MOQT framing and parameter errors follow {{MOQT}}.
 
 # Relay Processing
 
-When a relay receives usable context and issues a new upstream request to serve
-it, the relay SHOULD propagate the context if the extension is negotiated on
-the upstream session and local policy permits it. A relay that participates in
-the trace keeps the trace ID and uses the span ID of its outgoing operation as
-the new parent ID, following the W3C mutation rules. A relay can also forward
-both fields unchanged.
+A relay issuing a new upstream request SHOULD propagate usable context from
+one downstream request that triggered it, if the upstream session negotiated
+the extension and local policy permits it. A relay that participates in the
+trace keeps the trace ID and uses its outgoing span ID as the new parent ID,
+following the W3C mutation rules. A relay can also forward both fields unchanged.
 
-A relay can trace a cache hit locally. When a request reuses an existing
-upstream subscription, the relay can link the operations in its telemetry.
-Trace context MUST NOT affect which upstream requests the relay issues, request
-aggregation, or cache identity.
+A relay can trace a cache hit locally or link downstream requests to a shared
+upstream operation in its telemetry. Trace context MUST NOT affect which
+upstream requests the relay issues, request aggregation, or cache identity.
 
 # Security Considerations
 

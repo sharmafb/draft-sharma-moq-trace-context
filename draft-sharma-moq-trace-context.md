@@ -87,6 +87,8 @@ Length counts the bytes after itself. Traceparent Length counts the bytes of
 Traceparent. Tracestate occupies the remaining bytes and is omitted when none
 remain. Both fields use the ASCII header field values from {{TRACE-CONTEXT}}.
 
+## Traceparent Format {#traceparent-format}
+
 Traceparent Length is 55 for version `00`. The four fields appear in the
 order below, use lowercase hexadecimal characters, and are separated by
 hyphens.
@@ -105,6 +107,30 @@ hyphens.
 version-trace-id-parent-id-trace-flags
 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
 ~~~
+
+## Tracestate Format {#tracestate-format}
+
+Tracestate uses the combined field value from Section 3.3 of {{TRACE-CONTEXT}}.
+It is an ordered ASCII list of up to 32 comma-separated members. Each nonempty
+member has the form `key=value`, and each key can appear once.
+
+- **Key** identifies the tracing system. A simple key is 1 to 256 characters.
+  A multi-tenant key has the form `tenant@system`, with 1 to 241 characters for
+  the tenant and 1 to 14 for the system. These identifiers use lowercase
+  letters, digits, `_`, `-`, `*`, or `/` and start with a lowercase letter.
+  A tenant identifier can also start with a digit.
+- **Value** carries opaque tracing data. It is 1 to 256 printable ASCII
+  characters, excluding commas and equals signs, and ends in a non-space
+  character.
+
+Receivers accept empty members and ignore spaces and horizontal tabs around
+members. The following example contains two members.
+
+~~~
+rojo=00f067aa0ba902b7,studio@congo=t61rcWkgMzE
+~~~
+
+## Validation
 
 The receiver parses the context within the validated outer Length. It MUST
 ignore the context if Traceparent Length cannot be decoded, exceeds the

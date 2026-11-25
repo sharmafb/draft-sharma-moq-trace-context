@@ -49,8 +49,14 @@ publishers can use it to correlate spans across MOQT sessions.
 
 A MOQT Request ID identifies a request within one session {{MOQT}}. A relay can
 issue another request on a separate session to serve it. W3C Trace Context
-{{TRACE-CONTEXT}} provides a shared trace ID and identifies the sending
-operation so the endpoints can reconstruct the request path.
+{{TRACE-CONTEXT}} lets tracing tools connect those operations across sessions
+using two fields.
+
+- **Traceparent** identifies the overall trace and the sender's operation
+  within it. It also carries flags, including a hint about whether the sender
+  recorded trace data.
+- **Tracestate** carries optional vendor-specific tracing information, such as
+  a tracing system's own identifiers, as an ordered list of key-value pairs.
 
 {::boilerplate bcp14-tagged}
 

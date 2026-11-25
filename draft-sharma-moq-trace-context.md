@@ -52,9 +52,11 @@ issue another request on a separate session to serve it. W3C Trace Context
 {{TRACE-CONTEXT}} lets tracing tools connect those operations across sessions
 using two fields.
 
-- **Traceparent** identifies the overall trace and the sender's operation
-  within it. It also carries flags, including a hint about whether the sender
-  recorded trace data.
+- **Traceparent** carries a shared trace ID that ties related operations
+  together, such as a chain of `SUBSCRIBE` requests from a subscriber through
+  relays to a publisher. It also carries a parent ID that identifies the
+  specific operation that sent the request. Its flags include a hint about
+  whether the sender recorded trace data.
 - **Tracestate** carries optional vendor-specific tracing information, such as
   a tracing system's own identifiers, as an ordered list of key-value pairs.
 

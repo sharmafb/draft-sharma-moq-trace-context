@@ -105,6 +105,28 @@ A relay can trace a cache hit locally or link downstream requests to a shared
 upstream operation in its telemetry. Trace context MUST NOT affect which
 upstream requests the relay issues, request aggregation, or cache identity.
 
+# Shared Subscription Example {#shared-subscription-example}
+
+Two clients subscribe to the same Track through `relay_1`. Each starts its own
+trace, and all three sessions have negotiated the extension. The arrows are
+numbered in order and labeled with `(trace ID, parent ID)`.
+
+~~~
+          (1) SUBSCRIBE             (2) SUBSCRIBE
+              (A, C1)                   (A, R1)
+client_1 ----------------> relay_1 ----------------> publisher
+                              ^
+                              |
+client_2 ---------------------+
+          (3) SUBSCRIBE
+              (B, C2)
+~~~
+
+The relay continues Trace A on its upstream SUBSCRIBE with its own outgoing
+span ID, R1. When `client_2` subscribes, the relay reuses that upstream
+subscription and can link Trace B to it in local telemetry. Each SUBSCRIBE
+carries its context once, even if the subscription delivers many Objects.
+
 # Security Considerations
 
 Trace context is untrusted metadata and MUST NOT affect authorization. Endpoints

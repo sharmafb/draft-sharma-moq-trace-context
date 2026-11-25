@@ -87,18 +87,24 @@ Length counts the bytes after itself. Traceparent Length counts the bytes of
 Traceparent. Tracestate occupies the remaining bytes and is omitted when none
 remain. Both fields use the ASCII header field values from {{TRACE-CONTEXT}}.
 
-Version `00` of Traceparent uses four lowercase hexadecimal fields separated
-by hyphens. The fields contain 2, 32, 16, and 2 characters, respectively.
-The trace ID and parent ID each contain at least one nonzero digit.
+Traceparent Length is 55 for version `00`. The four fields appear in the
+order below, use lowercase hexadecimal characters, and are separated by
+hyphens.
+
+- **Version** (2 characters) identifies the format used by the other fields.
+- **Trace ID** (32 characters) identifies the trace shared by related
+  operations. At least one digit is nonzero.
+- **Parent ID** (16 characters) identifies the operation that sent the request.
+  At least one digit is nonzero.
+- **Trace flags** (2 characters) carry tracing information. In the example,
+  `01` sets the sampled flag, which signals that the sender may have recorded
+  trace data. The flags follow {{TRACE-CONTEXT-2}}, including its rule for
+  preserving the random trace ID flag when continuing a trace.
 
 ~~~
 version-trace-id-parent-id-trace-flags
 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
 ~~~
-
-Traceparent Length is 55 for version `00`. The example flags value `01` sets
-the sampled flag. The `trace-flags` field follows {{TRACE-CONTEXT-2}}, including
-its rule for preserving the random trace ID flag when continuing a trace.
 
 The receiver parses the context within the validated outer Length. It MUST
 ignore the context if Traceparent Length cannot be decoded, exceeds the
